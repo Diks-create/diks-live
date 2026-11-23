@@ -1,0 +1,30 @@
+name: Build Flutter Web
+on:
+  push:
+    branches: [ main ]
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Unzip project
+        run: |
+          unzip -o diks_live_camera_satu_file.zip
+          PROJECT_DIR=$(find . -name "pubspec.yaml" | head -n 1 | xargs dirname)
+          echo "PROJECT_DIR=$PROJECT_DIR" >> $GITHUB_ENV
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - name: Build Web
+        run: |
+          cd $PROJECT_DIR
+          flutter config --enable-web
+          flutter pub get
+          flutter build web --release --base-href /diks-live/
+      - name: Deploy to Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ${{ env.PROJECT_DIR }}/build/web
