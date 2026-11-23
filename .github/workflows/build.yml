@@ -20,7 +20,7 @@ jobs:
       - name: Build Web
         run: |
           cd $PROJECT_DIR
-          flutter config --enable-web
+          flutter create . --platforms web
           flutter pub get
           flutter build web --release --base-href /diks-live/
       - name: Deploy to Pages
