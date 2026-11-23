@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DIKS-HD - Penjernih Foto</title>
+<style>
+body{margin:0;font-family:Arial;background:#0f0f1a;color:white;text-align:center;padding:20px}
+h1{color:#a855f7;font-size:32px;margin:5px}
+p{color:#aaa}
+.box{background:#1a1a2e;border:2px dashed #a855f7;border-radius:15px;padding:20px;margin:15px auto;max-width:500px}
+input{width:100%;margin:10px 0}
+button{background:#a855f7;color:white;border:none;padding:12px 20px;border-radius:10px;font-size:16px;font-weight:bold;width:100%;margin-top:10px}
+img,canvas{max-width:100%;border-radius:10px;margin-top:10px}
+label{display:block;text-align:left;margin-top:10px;font-size:14px}
+</style>
+</head>
+<body>
+<h1>DIKS-HD ✨</h1>
+<p>Penjernih Foto Otomatis - Gratis</p>
+<div class="box">
+<input type="file" id="upload" accept="image/*">
+<img id="preview" style="display:none">
+<canvas id="canvas" style="display:none"></canvas>
+<label>Terang: <span id="vTerang">110</span>%</label>
+<input type="range" id="terang" min="50" max="200" value="110">
+<label>Kontras: <span id="vKontras">130</span>%</label>
+<input type="range" id="kontras" min="50" max="200" value="130">
+<label>Tajam: <span id="vTajam">150</span>%</label>
+<input type="range" id="tajam" min="100" max="300" value="150">
+<label>Warna: <span id="vWarna">120</span>%</label>
+<input type="range" id="warna" min="50" max="200" value="120">
+<button onclick="proses()">JERNIHKAN SEKARANG 🔥</button>
+<button onclick="download()" style="background:#22c55e">DOWNLOAD HASIL ⬇️</button>
+</div>
+<p>by @diks-create • 100% Gratis, Tanpa Watermark</p>
+<script>
+let img=new Image();
+document.getElementById('upload').addEventListener('change',e=>{
+let f=e.target.files[0]; if(!f) return;
+let r=new FileReader();
+r.onload=ev=>{img.onload=()=>{document.getElementById('preview').src=ev.target.result;document.getElementById('preview').style.display='block';proses()};img.src=ev.target.result};
+r.readAsDataURL(f);});
+['terang','kontras','tajam','warna'].forEach(x=>{document.getElementById(x).addEventListener('input',()=>{document.getElementById('v'+x.charAt(0).toUpperCase()+x.slice(1)).innerText=document.getElementById(x).value;proses()})});
+function proses(){
+if(!img.src) return;
+let c=document.getElementById('canvas');let ctx=c.getContext('2d');
+c.width=img.naturalWidth;c.height=img.naturalHeight;
+let t=document.getElementById('terang').value/100;
+let k=document.getElementById('kontras').value/100;
+let w=document.getElementById('warna').value/100;
+ctx.filter=`brightness(${t}) contrast(${k}) saturate(${w})`;
+ctx.drawImage(img,0,0);
+document.getElementById('preview').src=c.toDataURL('image/jpeg',0.95);}
+function download(){
+let a=document.createElement('a');a.download='diks-hd-jernih.jpg';a.href=document.getElementById('preview').src;a.click();}
+</script>
+</body>
+  </html>
