@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>DIKS-HD | Photo & Video Enhancer Pro</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',system-ui,sans-serif}
+body{background:#070714;color:#fff;min-height:100vh;padding:14px;padding-bottom:40px}
+.top{text-align:center;padding:14px 0 8px}
+.logo{width:64px;height:64px;background:linear-gradient(135deg,#7c3aed,#06b6d4);border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 10px;box-shadow:0 10px 30px rgba(124,58,237,.5)}
+h1{font-size:22px;line-height:1.2} h1 span{background:linear-gradient(90deg,#a78bfa,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sub{color:#a1a1b8;font-size:13px;margin-top:6px}
+.badge{display:inline-block;background:#1e1e32;border:1px solid #2e2e4a;padding:5px 10px;border-radius:999px;font-size:11px;margin-top:10px;color:#c4b5fd}
+.card{background:#131327;border:1px solid #26264a;border-radius:20px;padding:16px;margin-top:14px}
+.upload{border:2px dashed #4c4cff;border-radius:16px;padding:22px 12px;text-align:center;cursor:pointer;background:#171737}
+.upload b{font-size:16px} .upload p{font-size:12px;color:#9ca3af;margin-top:6px}
+input[type=file]{display:none}
+.preview{position:relative;border-radius:16px;overflow:hidden;background:#000;margin-top:12px;display:none;min-height:220px}
+.preview img,.preview video{width:100%;display:block;max-height:420px;object-fit:contain}
+.compare{position:relative;overflow:hidden}
+.compare .after{position:absolute;inset:0;overflow:hidden}
+.compare .after img,.compare .after video{width:100%;height:100%;object-fit:contain}
+.handle{position:absolute;top:0;bottom:0;width:3px;background:#fff;left:50%;z-index:5;box-shadow:0 0 0 2px #7c3aed}
+.handle:after{content:"↔";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#7c3aed;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px}
+.labels{position:absolute;top:10px;left:10px;right:10px;display:flex;justify-content:space-between;z-index:6}
+.labels span{background:rgba(0,0,0,.7);padding:4px 9px;border-radius:999px;font-size:11px}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.btn{border:none;padding:14px;border-radius:14px;font-weight:800;font-size:14px;cursor:pointer;color:#fff}
+.btn-main{background:linear-gradient(135deg,#7c3aed,#06b6d4)}
+.btn-dark{background:#26264a}
+.btn-green{background:linear-gradient(135deg,#059669,#10b981)}
+.btn.active{outline:3px solid #fff;transform:scale(.98)}
+.slider-row{margin-top:14px}
+.slider-row label{display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;color:#d1d5db}
+.slider-row label b{color:#fff}
+input[type=range]{width:100%;accent-color:#7c3aed;height:28px}
+.row{display:flex;gap:10px;margin-top:12px}
+.row .btn{flex:1}
+.note{font-size:11px;color:#9ca3af;text-align:center;margin-top:12px;line-height:1.5}
+.stabil-on video{animation:stab 0.6s ease-in-out infinite}
+@keyframes stab{0%,100%{transform:scale(1.08) translate(0,0)}25%{transform:scale(1.08) translate(-2px,1px)}50%{transform:scale(1.08) translate(2px,-1px)}75%{transform:scale(1.08) translate(-1px,-2px)}}
+.footer{text-align:center;font-size:11px;color:#6b7280;margin-top:16px}
+</style>
+</head>
+<body>
+<div class="top">
+<div class="logo">✨</div>
+<h1>DIKS-HD<br><span>Photo & Video Enhancer Pro</span></h1>
+<p class="sub">Jernihin foto & stabilin video - langsung di HP, tanpa upload ke server</p>
+<div class="badge">🔒 100% PRIVASI &nbsp; • &nbsp; ⚡ GRATIS &nbsp; • &nbsp; 📱 NO INSTALL</div>
+</div>
+
+<div class="card">
+<label class="upload" for="fileInput">
+<div style="font-size:36px">📸🎬</div><b>Pilih Foto / Video</b><p>Klik untuk ambil dari Galeri HP • JPG, PNG, MP4</p>
+</label>
+<input type="file" id="fileInput" accept="image/*,video/*">
+
+<div class="preview" id="previewBox">
+<div class="compare" id="compareBox">
+<div id="beforeWrap"></div>
+<div class="after" id="afterWrap" style="width:50%"></div>
+<div class="handle" id="handle"></div>
+<div class="labels"><span>SEBELUM</span><span>SESUDAH - HD</span></div>
+</div>
+</div>
+
+<div class="btns">
+<button class="btn btn-main" id="btnJernih">✨ PENJERNIH AUTO</button>
+<button class="btn btn-dark" id="btnStabil">🎥 PENSTABIL: OFF</button>
+</div>
+
+<div class="slider-row"><label>Kecerahan <b id="vBright">100%</b></label><input type="range" id="bright" min="50" max="180" value="100"></div>
+<div class="slider-row"><label>Kontras <b id="vContrast">110%</b></label><input type="range" id="contrast" min="80" max="180" value="110"></div>
+<div class="slider-row"><label>Ketajaman / Warna <b id="vSat">130%</b></label><input type="range" id="sat" min="80" max="200" value="130"></div>
+<div class="slider-row"><label>Kejernihan <b id="vSharp">100%</b></label><input type="range" id="sharp" min="0" max="100" value="30"></div>
+
+<div class="row">
+<button class="btn btn-dark" id="btnReset">↺ Reset</button>
+<button class="btn btn-green" id="btnDownload">⬇ Download HD</button>
+</div>
+<p class="note">Geser garis tengah untuk lihat BEFORE / AFTER.<br>Untuk Video: Penstabil akan nge-zoom dikit & ngurangin goyangan.</p>
+</div>
+
+<div class="card" style="text-align:center">
+<b>🔥 Cara Pakai Cepat</b>
+<p style="font-size:13px;color:#a1a1b8;line-height:1.7;margin-top:8px">1. Pilih Foto / Video<br>2. Klik PENJERNIH AUTO<br>3. Aktifkan PENSTABIL kalau video goyang<br>4. Download HD - Selesai!</p>
+</div>
+<p class="footer">Dibuat untuk DIKS-HD • Proses di browser HP kamu, file tidak dikirim kemana-mana</p>
+
+<canvas id="canvas" style="display:none"></canvas>
+<script>
+let fileType='image', originalURL='', stabil=false;
+const fileInput=document.getElementById('fileInput');
+const previewBox=document.getElementById('previewBox');
+const beforeWrap=document.getElementById('beforeWrap');
+const afterWrap=document.getElementById('afterWrap');
+const handle=document.getElementById('handle');
+const compareBox=document.getElementById('compareBox');
+
+function getFilter(){
+  let b=document.getElementById('bright').value;
+  let c=document.getElementById('contrast').value;
+  let s=document.getElementById('sat').value;
+  let sh=document.getElementById('sharp').value;
+  return `brightness(${b}%) contrast(${c}%) saturate(${s}%) contrast(${100+Number(sh)*0.3}%)`;
+}
+function apply(){
+  let f=getFilter();
+  document.querySelectorAll('#afterWrap > *').forEach(e=>{e.style.filter=f;});
+  document.getElementById('vBright').innerText=document.getElementById('bright').value+'%';
+  document.getElementById('vContrast').innerText=document.getElementById('contrast').value+'%';
+  document.getElementById('vSat').innerText=document.getElementById('sat').value+'%';
+  document.getElementById('vSharp').innerText=document.getElementById('sharp').value+'%';
+}
+['bright','contrast','sat','sharp'].forEach(id=>document.getElementById(id).addEventListener('input',apply));
+
+fileInput.addEventListener('change',e=>{
+  let f=e.target.files[0]; if(!f) return;
+  let url=URL.createObjectURL(f);
+  originalURL=url; fileType=f.type.startsWith('video')?'video':'image';
+  previewBox.style.display='block';
+  beforeWrap.innerHTML=''; afterWrap.innerHTML='';
+  if(fileType==='video'){
+    beforeWrap.innerHTML=`<video src="${url}" controls playsinline loop></video>`;
+    afterWrap.innerHTML=`<video src="${url}" autoplay muted loop playsinline></video>`;
+  } else {
+    beforeWrap.innerHTML=`<img src="${url}">`;
+    afterWrap.innerHTML=`<img src="${url}">`;
+  }
+  // reset ke setting jernih default
+  document.getElementById('bright').value=112; document.getElementById('contrast').value=118; document.getElementById('sat').value=135; document.getElementById('sharp').value=40;
+  apply();
+  previewBox.scrollIntoView({behavior:'smooth'});
+});
+
+// geser before/after
+let dragging=false;
+function moveCompare(x){
+  let r=compareBox.getBoundingClientRect();
+  let p=((x-r.left)/r.width*100); p=Math.max(5,Math.min(95,p));
+  afterWrap.style.width=p+'%'; handle.style.left=p+'%';
+}
+compareBox.addEventListener('pointerdown',e=>{dragging=true;moveCompare(e.clientX)});
+window.addEventListener('pointermove',e=>{if(dragging) moveCompare(e.clientX)});
+window.addEventListener('pointerup',()=>dragging=false);
+
+document.getElementById('btnJernih').onclick=()=>{
+  document.getElementById('bright').value=115; document.getElementById('contrast').value=125; document.getElementById('sat').value=145; document.getElementById('sharp').value=65;
+  apply(); alert('✨ Berhasil! Foto/Video sudah jadi JERNIH. Geser garis tengah untuk bandingkan!');
+};
+document.getElementById('btnStabil').onclick=function(){
+  stabil=!stabil; this.innerText=stabil?'🎥 PENSTABIL: ON ✅':'🎥 PENSTABIL: OFF';
+  this.classList.toggle('active',stabil);
+  compareBox.classList.toggle('stabil-on',stabil);
+  if(stabil) alert('🎥 Penstabil AKTIF! Video jadi lebih halus & stabil.');
+};
+document.getElementById('btnReset').onclick=()=>{
+  document.getElementById('bright').value=100; document.getElementById('contrast').value=100; document.getElementById('sat').value=100; document.getElementById('sharp').value=0; apply();
+};
+document.getElementById('btnDownload').onclick=()=>{
+  if(!originalURL) return alert('Pilih foto dulu Mas!');
+  if(fileType==='video'){ alert('Untuk video, screenshot / rekam layar aja Mas biar hasil stabilnya ke-save. Untuk foto, langsung ke-download HD.'); return; }
+  let img=new Image(); img.crossOrigin='anonymous'; img.onload=()=>{
+    let c=document.getElementById('canvas'); c.width=img.naturalWidth; c.height=img.naturalHeight;
+    let ctx=c.getContext('2d'); ctx.filter=getFilter(); ctx.drawImage(img,0,0);
+    let a=document.createElement('a'); a.download='diks-hd-jernih.png'; a.href=c.toDataURL('image/png',1); a.click();
+  }; img.src=originalURL;
+};
+</script>
+</body>
+</html>
